@@ -1,0 +1,37 @@
+===============================================================================
+简单多线程HTTP服务器实现
+===============================================================================
+
+## 项目结构
+server.c
+├── main()                      → 入口，创建socket，绑定端口，监听连接 
+|    ├── socket()          → 创建TCP socket
+|    ├── bind()            → 绑定0.0.0.0:8080
+|    ├── listen()          → 开始监听
+|    └── while(1)循环
+|        ├── accept()    → 接受客户端连接
+|        ├── pthread_create() → 创建线程处理请求
+|        └── pthread_detach()  → 分离线程
+├── handle_client()             → 线程函数，处理单个HTTP请求
+|        ├── recv()            → 接收HTTP请求
+|        ├── regexec()         → 正则解析"GET /path HTTP/1"
+|        ├── url_decode()      → URL解码路径
+|        ├── get_file_extension() → 获取扩展名
+|        ├── build_http_response() → 构建响应
+|        │     ├── open()      → 打开文件
+|        │     ├── fstat()     → 获取文件大小
+|        │     ├── 构建响应头
+|        │     └── read()      → 读取文件内容
+|        └── send()            → 发送响应给客户端
+├── get_mime_type()             → 根据扩展名获取MIME类型
+├── get_file_case_insensitive() → 不区分大小写查找文件
+└── case_insensitive_compare()  → 不区分大小写字符串比较
+
+# 浏览器访问
+http://localhost:8080/home.html
+
+# curl测试
+curl http://localhost:8080/ok.jpg
+
+# Resource
+https://github.com/JeffreytheCoder/Simple-HTTP-Server
